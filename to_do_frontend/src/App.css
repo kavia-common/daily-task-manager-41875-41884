@@ -1,11 +1,12 @@
 /* Ocean Professional Theme */
-/* Palette and Tokens */
+/* Palette and Tokens (Updated to Pink/Purple) */
 
 /* Light theme (default) */
 :root {
   /* Core colors */
-  --primary: #2563EB;           /* Blue 600 */
-  --secondary: #F59E0B;         /* Amber 500 */
+  --primary: #EC4899;           /* Pink 500 */
+  --primary-contrast: #ffffff;  /* For text/icons on primary surfaces */
+  --secondary: #A855F7;         /* Purple 500 */
   --success: #10B981;           /* Emerald 500, used for positive states */
   --error: #EF4444;             /* Red 500 */
 
@@ -17,7 +18,7 @@
 
   /* Borders and effects */
   --border: rgba(17,24,39,0.10);
-  --ring: rgba(37, 99, 235, 0.35);
+  --ring: rgba(236, 72, 153, 0.35); /* ring toned to primary (pink) */
 
   /* Radii */
   --radius: 12px;
@@ -28,13 +29,17 @@
   --shadow: 0 8px 24px rgba(0,0,0,0.06);
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.08);
 
-  /* Gradient */
-  --gradient: linear-gradient(180deg, rgba(59,130,246,0.08), rgba(249,250,251,0.8));
+  /* Gradient - subtly incorporate pink */
+  --gradient: linear-gradient(
+    180deg,
+    rgba(236, 72, 153, 0.08),
+    rgba(249, 250, 251, 0.8)
+  );
 
   /* Component tints */
   --chip-bg: #ffffff;
-  --chip-hover-bg: rgba(37,99,235,0.06);
-  --chip-active-bg: rgba(37,99,235,0.10);
+  --chip-hover-bg: rgba(236,72,153,0.06);
+  --chip-active-bg: rgba(236,72,153,0.10);
   --ghost-hover: rgba(17,24,39,0.04);
   --danger-hover: rgba(239,68,68,0.08);
 
@@ -46,8 +51,9 @@
 /* Dark theme */
 :root[data-theme="dark"] {
   /* Adjusted core brand for dark contrast */
-  --primary: #60A5FA;           /* Blue 400 for better contrast on dark */
-  --secondary: #FBBF24;         /* Amber 400 */
+  --primary: #F472B6;           /* Pink 400 for better contrast on dark */
+  --primary-contrast: #0B1220;  /* Matches current dark background */
+  --secondary: #C084FC;         /* Purple 400 */
   --success: #34D399;           /* Emerald 400 */
   --error: #F87171;             /* Red 400 */
 
@@ -57,20 +63,24 @@
   --text: #E5E7EB;              /* Gray 200 */
   --muted: #9CA3AF;             /* Gray 400 */
   --border: rgba(255,255,255,0.10);
-  --ring: rgba(96, 165, 250, 0.35);
+  --ring: rgba(244, 114, 182, 0.35); /* ring toned to dark primary (pink) */
 
   /* Shadows become subtle (less useful on dark) */
   --shadow-sm: 0 1px 2px rgba(0,0,0,0.30);
   --shadow: 0 8px 24px rgba(0,0,0,0.40);
   --shadow-lg: 0 16px 40px rgba(0,0,0,0.45);
 
-  /* Gradient tuned for dark */
-  --gradient: linear-gradient(180deg, rgba(96,165,250,0.08), rgba(11,18,32,0.9));
+  /* Gradient tuned for dark - subtle pink wash */
+  --gradient: linear-gradient(
+    180deg,
+    rgba(244, 114, 182, 0.08),
+    rgba(11, 18, 32, 0.9)
+  );
 
   /* Component tints */
   --chip-bg: rgba(255,255,255,0.04);
-  --chip-hover-bg: rgba(96,165,250,0.10);
-  --chip-active-bg: rgba(96,165,250,0.16);
+  --chip-hover-bg: rgba(244,114,182,0.10);
+  --chip-active-bg: rgba(244,114,182,0.16);
   --ghost-hover: rgba(255,255,255,0.06);
   --danger-hover: rgba(248,113,113,0.12);
 
@@ -236,9 +246,9 @@ body {
 
 .btn-primary {
   background: var(--primary);
-  color: #fff;
+  color: var(--primary-contrast);
 }
-.btn-primary:hover { box-shadow: 0 6px 16px rgba(37, 99, 235, 0.30); }
+.btn-primary:hover { box-shadow: 0 6px 16px rgba(236, 72, 153, 0.30); }
 
 .btn-ghost {
   background: transparent;
@@ -270,8 +280,8 @@ body {
 .chip-active {
   background: var(--chip-active-bg);
   color: var(--primary);
-  border-color: rgba(37,99,235,0.45);
-  box-shadow: 0 4px 12px rgba(37,99,235,0.15);
+  border-color: rgba(236,72,153,0.45);
+  box-shadow: 0 4px 12px rgba(236,72,153,0.15);
 }
 
 /* List */
