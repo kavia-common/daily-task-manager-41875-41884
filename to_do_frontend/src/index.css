@@ -7,6 +7,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
+
+/* Smooth theme transitions for common elements */
+html, body, #root, .app-root, .card, .input, .btn, .chip, .todo-item, .app-header, .app-footer {
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+
+/* Focus ring utility that uses theme ring and primary color */
+:where(button, [role="button"], input, .chip):focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px var(--ring), 0 0 0 1px var(--primary);
+  border-color: var(--primary);
+}
+
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 }

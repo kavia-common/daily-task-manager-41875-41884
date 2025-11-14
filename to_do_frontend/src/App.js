@@ -14,6 +14,9 @@ const ENV = {
  */
 const STORAGE_KEY = 'todo_tasks_v1';
 
+/** Theme persistence keys */
+const THEME_KEY = 'app_theme_v1';
+
 /**
  * Task model:
  * { id: string, text: string, completed: boolean, createdAt: number }
@@ -209,6 +212,24 @@ function Filters({ filter, setFilter }) {
 }
 
 /**
+ * PUBLIC_INTERFACE
+ * getInitialTheme resolves the theme string using persisted user preference or system preference.
+ */
+export function getInitialTheme(storage = window.localStorage, windowObj = window) {
+  /** Determine initial theme: from localStorage or system prefers-color-scheme. */
+  try {
+    const stored = storage.getItem(THEME_KEY);
+    if (stored === 'light' || stored === 'dark') {
+      return stored;
+    }
+  } catch {
+    // ignore
+  }
+  const prefersDark = windowObj.matchMedia && windowObj.matchMedia('(prefers-color-scheme: dark)').matches;
+  return prefersDark ? 'dark' : 'light';
+}
+
+/**
  * Main App: centered single-column layout with header, input form, list, and footer.
  */
 // PUBLIC_INTERFACE
@@ -217,14 +238,41 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('all');
   const [input, setInput] = useState('');
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(getInitialTheme());
 
   const inputRef = useRef(null);
 
+  // Apply theme to document and persist
   useEffect(() => {
-    // Theme attribute for potential future dark mode extension
     document.documentElement.setAttribute('data-theme', theme);
+    try {
+      window.localStorage.setItem(THEME_KEY, theme);
+    } catch {
+      // ignore persistence errors
+    }
   }, [theme]);
+
+  // Respond to system preference changes if user hasn't explicitly chosen
+  useEffect(() => {
+    const mql = window.matchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+    const stored = (() => {
+      try { return window.localStorage.getItem(THEME_KEY); } catch { return null; }
+    })();
+    const handler = (e) => {
+      // Only auto-switch when no explicit stored preference exists
+      if (stored !== 'light' && stored !== 'dark') {
+        setTheme(e.matches ? 'dark' : 'light');
+      }
+    };
+    if (mql && mql.addEventListener) {
+      mql.addEventListener('change', handler);
+      return () => mql.removeEventListener('change', handler);
+    } else if (mql && mql.addListener) {
+      mql.addListener(handler);
+      return () => mql.removeListener(handler);
+    }
+    return undefined;
+  }, []);
 
   // Load tasks on mount
   useEffect(() => {
@@ -273,14 +321,31 @@ function App() {
 
   const apiInfo = ENV.API_BASE ? `Connected to ${ENV.API_BASE}` : 'Local storage mode';
 
+  const isDark = theme === 'dark';
+  const toggleTheme = () => setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+
   return (
     <div className="app-root">
       <header className="app-header" role="banner">
         <div className="header-content">
-          <h1 className="app-title">Ocean Tasks</h1>
-          <p className="app-subtitle" aria-live="polite">
-            {remaining} {remaining === 1 ? 'task' : 'tasks'} remaining • {apiInfo}
-          </p>
+          <div className="title-wrap">
+            <h1 className="app-title">Ocean Tasks</h1>
+            <p className="app-subtitle" aria-live="polite">
+              {remaining} {remaining === 1 ? 'task' : 'tasks'} remaining • {apiInfo}
+            </p>
+          </div>
+          <div className="header-actions">
+            <button
+              type="button"
+              className="theme-toggle"
+              onClick={toggleTheme}
+              aria-pressed={isDark}
+              aria-label="Toggle dark mode"
+            >
+              <span className="icon" aria-hidden="true">{isDark ? '🌙' : '☀️'}</span>
+              <span>{isDark ? 'Dark' : 'Light'}</span>
+            </button>
+          </div>
         </div>
       </header>
 
